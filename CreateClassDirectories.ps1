@@ -1,15 +1,23 @@
 # PowerShell script to create course directory structure in OneDrive
-# Created: December 2025
 
 # --- Configuration ---
 $DONE = "done"
 $SEMESTERS = @("Spring", "Summer", "Fall")
 
 Write-Host "=== Course Directory Creator ===" -ForegroundColor Cyan
+Write-Host "=== by Jim Quinn ===" -ForegroundColor Cyan
 Write-Host ""
+
+# make sure the synced and local folders exist. If not, create them.
+if( -not (Test-Path -Path "$env:ONEDRIVE\Synced")) {
+    Write-Host "OneDrive folder not found at $env:ONEDRIVE" -ForegroundColor Red
+    Write-Host "Please ensure OneDrive is installed and synced before running this script." -ForegroundColor Red
+    exit 1
+}
 
 # Get the year
 $YEAR = Read-Host "Enter the year"
+
 
 # Check if ONEDRIVE environment variable exists
 if ([string]::IsNullOrEmpty($env:ONEDRIVE)) {
