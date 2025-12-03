@@ -1,5 +1,9 @@
 #!/bin/bash
 
+# === AI prompt
+# I am working on a script to create specific directory structure in my one drive home folder. 
+# The currently loaded script is my first attempt. Describe what the code is doing
+
 # # --- Config ---
 DONE="done"
 SEMESTERS=("Spring" "Summer" "Fall")
@@ -8,7 +12,14 @@ SEMESTERS=("Spring" "Summer" "Fall")
 read -r -p "Enter the year: " YEAR
 
 # YEAR=$(date +%Y)
-ROOT_DIR="$YEAR"
+
+# Check if ONEDRIVE variable exists, if not ask for the path
+if [ -z "$ONEDRIVE" ]; then
+	echo "ONEDRIVE environment variable not found."
+	read -r -p "Enter the full path to your OneDrive folder: " ONEDRIVE
+fi
+
+ROOT_DIR="$ONEDRIVE/$YEAR"
 
 echo "Course directories will be added for $ROOT_DIR"
 
@@ -21,9 +32,7 @@ umask 0000
 echo "Setting up the directory structure..."
 
 # create the directory for the year
-read -r -p "Enter the path to the root directory: " ROOT_PATH
-echo $ROOT_PATH
-mkdir -p "$ROOT_DIR" || { echo "Error: Could not create main directory $ROOT_DIR. Exiting.", exit 1; }
+mkdir -p "$ROOT_DIR" || { echo "Error: Could not create main directory $ROOT_DIR. Exiting."; exit 1; }
 
 # create the semester directories
 for semester in "${SEMESTERS[@]}"; do
@@ -42,7 +51,7 @@ select selected_semester in "${SEMESTERS[@]}"; do
 	if [[ " ${SEMESTERS[@]} " =~ " ${selected_semester}" ]]; then 
 		# semester is valid
 		
-		TARGET_DIR="$ROOT_PATH/$ROOT_DIR/$selected_semester"
+		TARGET_DIR="$ROOT_DIR/$selected_semester"
 		echo "You have selected the **$selected_semester** directory, in the $ROOT_DIR folder"
 		break
 	else
